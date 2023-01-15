@@ -2,14 +2,17 @@ package ru.synergy.sharedpreferencesexample;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity {
 
     EditText et;
     Button btnSave, btnLoad;
@@ -26,25 +29,37 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnSave = (Button) findViewById(R.id.btnSave);
         btnLoad = (Button) findViewById(R.id.btnLoad);
 
-        btnSave.setOnClickListener(this);
-        btnLoad.setOnClickListener(this);
-    }
+//        btnSave.setOnClickListener(this);
+//        btnLoad.setOnClickListener(this);
 
-    @Override
-    public  void  onClick(View v) {
-        switch (v.getId()){
-            case R.id.btnSave:
+        loadText();
+
+        et.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 saveText();
-                break;
-            case R.id.btnLoad:
-                loadText();
-                break;
-            default:
-                break;
-        }
-
+                Log.d(SAVED_TEXT, et.getText().toString());
+                return true;
+            }
+        });
 
     }
+
+//    @Override
+//    public  void  onClick(View v) {
+//        switch (v.getId()){
+//            case R.id.btnSave:
+//                saveText();
+//                break;
+//            case R.id.btnLoad:
+//                loadText();
+//                break;
+//            default:
+//                break;
+//        }
+//
+//
+//    }
 
     private void loadText(){
         sharedPreferences = getPreferences(MODE_PRIVATE);
@@ -64,11 +79,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
-
-
-
-
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        saveText();
+    }
 
 
 
